@@ -58,4 +58,5 @@ class TagCommands:
                 await interaction.response.send_message(f"Tag '{name}' doesn't exist!", ephemeral=True)
                 return
             
-            await interaction.response.send_message(content)
+            formatted_content = content.replace("\\n", "\n")
+            await interaction.response.send_message(formatted_content)
