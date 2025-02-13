@@ -2,9 +2,11 @@ from discord import app_commands, Interaction
 from typing import List
 from .database import TagDatabase
 
+
 class TagCommands:
-    def __init__(self, db: TagDatabase):
+    def __init__(self, db: TagDatabase, client):
         self.db = db
+        self.client = client
 
     async def tag_autocomplete(self, interaction: Interaction, current: str) -> List[app_commands.Choice[str]]:
         user_tags = self.db.get_user_tags(interaction.user.id)
@@ -60,3 +62,17 @@ class TagCommands:
             
             formatted_content = content.replace("\\n", "\n")
             await interaction.response.send_message(formatted_content)
+
+        @app_commands.dm_only()
+        @tree.command(name="stats", description="Show app statistics")
+        async def stats(interaction: Interaction):            
+            guild_count = len(self.client.guilds)
+            tag_count = self.db.count_tags()
+            user_count = self.db.count_unique_users()
+            
+            message = (
+                f"- Server count : **{guild_count}**\n"
+                f"- Unique users : **{user_count}**\n"
+                f"- Tags created : **{tag_count}**"
+            )
+            await interaction.response.send_message(message, ephemeral=True)

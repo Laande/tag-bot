@@ -38,3 +38,15 @@ class TagDatabase:
                           (user_id, tag_name))
             result = cursor.fetchone()
             return result[0] if result else None
+        
+    def count_tags(self) -> int:
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT COUNT(*) FROM tags")
+            return cursor.fetchone()[0]
+    
+    def count_unique_users(self) -> int:
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT COUNT(DISTINCT user_id) FROM tags")
+            return cursor.fetchone()[0]

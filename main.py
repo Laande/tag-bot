@@ -11,7 +11,7 @@ tree = app_commands.CommandTree(client)
 
 def main():
     db = TagDatabase()
-    tag_commands = TagCommands(db)
+    tag_commands = TagCommands(db, client)
     tag_commands.setup_commands(tree)
 
     @client.event
